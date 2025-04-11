@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
-
   RSpec.shared_context 'with multiple companies' do
     let!(:company_1) { create(:company) }
     let!(:company_2) { create(:company) }
@@ -27,6 +26,18 @@ RSpec.describe "Users", type: :request do
         
         expect(result.size).to eq(company_1.users.size)
         expect(result.map { |element| element['id'] } ).to eq(company_1.users.ids)
+      end
+    end
+
+    context 'when fetching users by username' do
+      let(:user_1) { create(:user, username: 'Jhon Doe') }
+      let(:user_2) { create(:user, username: 'Bell Marques') }
+      let(:username_key) { 'Jh' }
+
+      it 'returns users with the keywords' do
+        get users_path(username_key)
+
+        expect(result).to eql([user_1])
       end
     end
 
